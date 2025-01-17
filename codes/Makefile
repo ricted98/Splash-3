@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-NUM_HARTS ?= 2
+NUM_HARTS ?= 1
 
 # create a minimal directory to be included in the fpga image
 splash3 :
