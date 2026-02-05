@@ -1,6 +1,11 @@
 TARGET = FMM
-OBJS = box.o construct_grid.o cost_zones.o defs.o fmm.o interactions.o memory.o particle.o partition_grid.o
+INPUT  = inputs/input.2.16384
 
+# Define Objects
+OBJS = posix_init.o $(basename $(INPUT)).o \
+       box.o construct_grid.o cost_zones.o defs.o fmm.o interactions.o memory.o particle.o partition_grid.o
+
+# Include the global rules
 include ../../Makefile.config
 
 defs.c: defs.h
@@ -17,10 +22,14 @@ interactions.o: interactions.c.in defs.h memory.h particle.h box.h partition_gri
 shell.o: shell.c.in defs.h memory.h particle.h box.h partition_grid.h interactions.h
 construct_grid.o: construct_grid.c.in defs.h memory.h particle.h box.h partition_grid.h construct_grid.h
 cost_zones.o: cost_zones.c.in defs.h memory.h box.h partition_grid.h cost_zones.h
-#orb.o: orb.c.in defs.h memory.h box.h partition_grid.h orb.h
 partition_grid.o: partition_grid.c.in defs.h memory.h box.h partition_grid.h
 box.o: box.c.in defs.h memory.h particle.h box.h
 particle.o: particle.c.in defs.h memory.h particle.h
 memory.o: memory.c.in defs.h memory.h
 defs.o: defs.c.in defs.h memory.h
 memory.h: defs.h particle.h box.h
+
+# Convert Input File to Object
+$(basename $(INPUT)).o: $(INPUT)
+	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@
+
