@@ -17,5 +17,8 @@ load.o: load.c.in stdinc.h
 util.o: util.c.in stdinc.h
 
 # Convert Input File to Object
+$(INPUT):
+	@:
+
 $(basename $(INPUT)).o: $(INPUT)
 	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

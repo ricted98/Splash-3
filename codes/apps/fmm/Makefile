@@ -30,6 +30,9 @@ defs.o: defs.c.in defs.h memory.h
 memory.h: defs.h particle.h box.h
 
 # Convert Input File to Object
+$(INPUT):
+	@:
+
 $(basename $(INPUT)).o: $(INPUT)
 	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@
 
