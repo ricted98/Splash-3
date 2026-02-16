@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <rtems.h>
-#include <rtems/untar.h>
+#include <rtems/imfs.h>
 
 extern char _binary_rootfs_tar_start[];
 extern char _binary_rootfs_tar_end[];
@@ -16,11 +16,14 @@ void *POSIX_Init(void *arg)
 {
     // Unpack the embedded tarball into "/"
     size_t tar_size = _binary_rootfs_tar_end - _binary_rootfs_tar_start;
-    int status = Untar_FromMemory(_binary_rootfs_tar_start, tar_size);
+    printf("Mounting TarFS from %p (%zu bytes)...\n", _binary_rootfs_tar_start, tar_size);
+
+    int status = rtems_tarfs_load("/", (uint8_t *)_binary_rootfs_tar_start, tar_size);
+
     if (status != 0) {
-        perror("Error: Could not unpack tar filesystem\n");
+        perror("Error: Could not mount TarFS");
     } else {
-        printf("Filesystem unpacked successfully\n");
+        printf("Filesystem mounted successfully\n");
     }
 
     if (freopen("inputs/n8k-p2", "r", stdin) == NULL) {
