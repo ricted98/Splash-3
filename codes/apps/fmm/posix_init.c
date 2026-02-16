@@ -4,22 +4,29 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <rtems.h>
+#include <rtems/untar.h>
 
-extern const unsigned char _binary_inputs_input_2_16384_start[];
-extern const unsigned char _binary_inputs_input_2_16384_end[];
-extern char _binary_inputs_input_2_16384_size;
+extern char _binary_rootfs_tar_start[];
+extern char _binary_rootfs_tar_end[];
+extern char _binary_rootfs_tar_size[];
 
 int main(int argc, char **argv);
 
-static void redirect_stdin_memory(const unsigned char *data, size_t len) {
-    FILE *memfp = fmemopen((void*)data, len, "r");
-    if (!memfp) { perror("fmemopen"); exit(1); }
-    stdin = memfp;
-}
-
 void *POSIX_Init(void *arg)
 {
-    redirect_stdin_memory(_binary_inputs_input_2_16384_start, (size_t)&_binary_inputs_input_2_16384_size);
+    // Unpack the embedded tarball into "/"
+    size_t tar_size = _binary_rootfs_tar_end - _binary_rootfs_tar_start;
+    int status = Untar_FromMemory(_binary_rootfs_tar_start, tar_size);
+    if (status != 0) {
+        perror("Error: Could not unpack tar filesystem\n");
+    } else {
+        printf("Filesystem unpacked successfully\n");
+    }
+
+    if (freopen("inputs/input.2.16384", "r", stdin) == NULL) {
+        perror("Error redirecting stdin to input file\n");
+        exit(1);
+    }
 
     char *argv[] = { "fmm", NULL };
     int rc = main(1, argv);

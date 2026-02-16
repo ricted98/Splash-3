@@ -1,8 +1,10 @@
 TARGET = BARNES
-INPUT  = inputs/n8k-p2
+ROOTFS_FILES = inputs/n8k-p2
+
+.PRECIOUS: $(ROOTFS_FILES)
 
 # Define Objects
-OBJS = posix_init.o $(basename $(INPUT)).o \
+OBJS = posix_init.o rootfs.o \
        code.o code_io.o load.o grav.o getparam.o util.o
 
 # Include the global rules
@@ -16,9 +18,9 @@ grav.o: grav.c.in stdinc.h
 load.o: load.c.in stdinc.h
 util.o: util.c.in stdinc.h
 
-# Convert Input File to Object
-$(INPUT):
-	@:
+# Generate rootfs
+rootfs.tar: $(ROOTFS_FILES)
+	tar -cf $@ $^
 
-$(basename $(INPUT)).o: $(INPUT)
+rootfs.o: rootfs.tar
 	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

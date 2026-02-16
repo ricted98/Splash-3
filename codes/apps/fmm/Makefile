@@ -1,8 +1,10 @@
 TARGET = FMM
-INPUT  = inputs/input.2.16384
+ROOTFS_FILES = inputs/input.2.16384
+
+.PRECIOUS: $(ROOTFS_FILES)
 
 # Define Objects
-OBJS = posix_init.o $(basename $(INPUT)).o \
+OBJS = posix_init.o rootfs.o \
        box.o construct_grid.o cost_zones.o defs.o fmm.o interactions.o memory.o particle.o partition_grid.o
 
 # Include the global rules
@@ -29,10 +31,9 @@ memory.o: memory.c.in defs.h memory.h
 defs.o: defs.c.in defs.h memory.h
 memory.h: defs.h particle.h box.h
 
-# Convert Input File to Object
-$(INPUT):
-	@:
+# Generate rootfs
+rootfs.tar: $(ROOTFS_FILES)
+	tar -cf $@ $^
 
-$(basename $(INPUT)).o: $(INPUT)
+rootfs.o: rootfs.tar
 	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@
-
