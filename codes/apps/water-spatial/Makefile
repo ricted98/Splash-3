@@ -25,7 +25,7 @@ water.o: water.c.in parameters.h mdvar.h water.h wwpot.h cnst.h mddata.h fileio.
 
 # Generate rootfs
 rootfs.tar: $(ROOTFS_FILES)
-	tar -cf $@ $^
+	tar -cf $@ -b 1 $^
 
 rootfs.o: rootfs.tar
 	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

@@ -33,7 +33,7 @@ memory.h: defs.h particle.h box.h
 
 # Generate rootfs
 rootfs.tar: $(ROOTFS_FILES)
-	tar -cf $@ $^
+	tar -cf $@ -b 1 $^
 
 rootfs.o: rootfs.tar
 	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@
