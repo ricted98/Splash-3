@@ -1,6 +1,13 @@
 TARGET = WATER-SPATIAL
-OBJS = bndry.o cnstnt.o cshift.o initia.o interf.o intraf.o kineti.o mdmain.o poteng.o predcor.o syscons.o water.o
+ROOTFS_FILES = inputs/n512-p2 random.in
 
+.PRECIOUS: $(ROOTFS_FILES)
+
+# Define Objects
+OBJS = posix_init.o rootfs.o \
+       bndry.o cnstnt.o cshift.o initia.o interf.o intraf.o kineti.o mdmain.o poteng.o predcor.o syscons.o water.o
+
+# Include the global rules
 include ../../Makefile.config
 
 bndry.o: bndry.c.in split.h mdvar.h parameters.h mddata.h global.h
@@ -15,3 +22,10 @@ poteng.o: poteng.c.in global.h split.h mdvar.h frcnst.h water.h wwpot.h paramete
 predcor.o: predcor.c.in split.h mdvar.h parameters.h mddata.h global.h
 syscons.o: syscons.c.in parameters.h mdvar.h water.h wwpot.h cnst.h mddata.h global.h
 water.o: water.c.in parameters.h mdvar.h water.h wwpot.h cnst.h mddata.h fileio.h frcnst.h randno.h global.h split.h
+
+# Generate rootfs
+rootfs.tar: $(ROOTFS_FILES)
+	tar -cf $@ $^
+
+rootfs.o: rootfs.tar
+	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

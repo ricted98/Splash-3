@@ -1,6 +1,10 @@
 TARGET = OCEAN
-OBJS = jacobcalc.o jacobcalc2.o laplacalc.o linkup.o main.o multi.o slave1.o slave2.o subblock.o
 
+# Define Objects
+OBJS = posix_init.o \
+       jacobcalc.o jacobcalc2.o laplacalc.o linkup.o main.o multi.o slave1.o slave2.o subblock.o
+
+# Include the global rules
 include ../../../Makefile.config
 
 decs.h: decs.h.in
@@ -13,4 +17,3 @@ slave2.c: decs.h
 laplacalc.c: decs.h
 multi.c: decs.h
 subblock.c: decs.h
-
