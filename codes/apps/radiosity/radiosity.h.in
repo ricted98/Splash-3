@@ -118,10 +118,10 @@ include(task.h)
 #endif
 
 #if (!defined(SIMULATOR) && !defined(DASH) && !defined(SGI_GL) && !defined(SUN4))
-#define MAX_PROCESSORS (1024)	      /* Maximum number of processors
+#define MAX_PROCESSORS (4)	      /* Maximum number of processors
 (i.e., processes) created */
-#define MAX_TASKQUEUES (1024)	      /* Maximum number of task queues */
-#define MAX_TASKS    (3276800)	      /* # of available task descriptors */
+#define MAX_TASKQUEUES (4)	      /* Maximum number of task queues */
+#define MAX_TASKS    (8192)	      /* # of available task descriptors */
 #define MAX_PATCHES  (1024)	      /* # of available patch objects */
 extern long MAX_ELEMENTS; 	      /* # of available element objects */
 extern long MAX_INTERACTIONS;         /* # of available interaction objs */
