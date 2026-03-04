@@ -1,5 +1,6 @@
 TARGET = FFT
-OBJS = fft.o
+OBJS = posix_init.o \
+       fft.o
 
+# Include the global rules
 include ../../Makefile.config
-
