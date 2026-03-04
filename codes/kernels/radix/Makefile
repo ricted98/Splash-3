@@ -1,5 +1,6 @@
 TARGET = RADIX
-OBJS = radix.o
+OBJS = posix_init.o \
+	   radix.o
 
+# Include the global rules
 include ../../Makefile.config
-
