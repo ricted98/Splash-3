@@ -9,7 +9,7 @@ int main(int argc, char **argv);
 void *POSIX_Init(void *arg)
 {
     int argc = 3;
-    char *argv[] = { "ocean_contiguous_partitions", "-p" STR(NUM_PROCS), "-n258", NULL };
+    char *argv[] = { "lu", "-p" STR(NUM_PROCS), "-n512", NULL };
     int rc = main(argc, argv);
     exit(rc);
     return NULL; // not reached

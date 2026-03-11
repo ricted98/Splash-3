@@ -1,5 +1,5 @@
 TARGET = FMM
-ROOTFS_FILES = inputs/input.2.16384
+ROOTFS_FILES = inputs/input.$(NUM_PROCS).16384
 
 .PRECIOUS: $(ROOTFS_FILES)
 

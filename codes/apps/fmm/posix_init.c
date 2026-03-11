@@ -6,6 +6,9 @@
 #include <rtems.h>
 #include <rtems/imfs.h>
 
+#define _STR(x) #x
+#define STR(x) _STR(x)
+
 extern char _binary_rootfs_tar_start[];
 extern char _binary_rootfs_tar_end[];
 extern char _binary_rootfs_tar_size[];
@@ -26,7 +29,7 @@ void *POSIX_Init(void *arg)
         printf("Filesystem mounted successfully\n");
     }
 
-    if (freopen("inputs/input.2.16384", "r", stdin) == NULL) {
+    if (freopen("inputs/input." STR(NUM_PROCS) ".16384", "r", stdin) == NULL) {
         perror("Error redirecting stdin to input file\n");
         exit(1);
     }
@@ -43,8 +46,8 @@ void *POSIX_Init(void *arg)
 
 /* POSIX configuration */
 #define CONFIGURE_POSIX_APPLICATION
-#define CONFIGURE_MAXIMUM_PROCESSORS 2
-#define CONFIGURE_MAXIMUM_POSIX_THREADS 2
+#define CONFIGURE_MAXIMUM_PROCESSORS NUM_PROCS
+#define CONFIGURE_MAXIMUM_POSIX_THREADS NUM_PROCS
 #define CONFIGURE_POSIX_INIT_THREAD_TABLE
 #define CONFIGURE_USE_IMFS_AS_BASE_FILESYSTEM
 #define CONFIGURE_MAXIMUM_FILE_DESCRIPTORS 32

@@ -1,5 +1,5 @@
 TARGET = WATER-NSQUARED
-ROOTFS_FILES = inputs/n512-p2 random.in
+ROOTFS_FILES = inputs/n512-p$(NUM_PROCS) random.in
 
 .PRECIOUS: $(ROOTFS_FILES)
 

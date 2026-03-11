@@ -44,7 +44,10 @@
 #define DEFAULT_N               262144
 #define DEFAULT_R                 1024
 #define DEFAULT_M             67108864
-#define MAX_PROCESSORS            4
+#ifndef NUM_PROCS
+#define NUM_PROCS 4
+#endif
+#define MAX_PROCESSORS NUM_PROCS
 #define RADIX_S                8388608.0e0
 #define RADIX           70368744177664.0e0
 #define SEED                 314159265.0e0

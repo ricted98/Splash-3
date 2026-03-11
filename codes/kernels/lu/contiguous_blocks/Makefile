@@ -1,5 +1,6 @@
 TARGET = LU
-OBJS = lu.o
+OBJS = posix_init.o \
+	   lu.o
 
+# Include the global rules
 include ../../../Makefile.config
-

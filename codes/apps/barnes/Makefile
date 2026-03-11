@@ -1,5 +1,5 @@
 TARGET = BARNES
-ROOTFS_FILES = inputs/n8k-p2
+ROOTFS_FILES = inputs/n8k-p$(NUM_PROCS)
 
 .PRECIOUS: $(ROOTFS_FILES)
 

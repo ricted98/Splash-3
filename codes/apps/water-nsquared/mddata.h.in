@@ -47,7 +47,10 @@ extern double ****PFORCES;
 
 extern double  TLC[100], FPOT, FKIN;
 
-#define MAXPROCS 1024
+#ifndef NUM_PROCS
+#define NUM_PROCS 4
+#endif
+#define MAXPROCS NUM_PROCS
 
 extern long StartMol[MAXPROCS+1];
 extern long MolsPerProc;

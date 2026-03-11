@@ -41,4 +41,4 @@ glibps/glibps.a:
 clean:
 	$(MAKE) -C glibdumb clean
 	$(MAKE) -C glibps clean
-	$(RM) $(OBJS) RADIOSITY
+	$(RM) $(OBJS) RADIOSITY $(HS) $(M4_GEN_C)

@@ -6,6 +6,9 @@
 #include <rtems.h>
 #include <rtems/imfs.h>
 
+#define _STR(x) #x
+#define STR(x) _STR(x)
+
 extern char _binary_rootfs_tar_start[];
 extern char _binary_rootfs_tar_end[];
 extern char _binary_rootfs_tar_size[];
@@ -32,7 +35,7 @@ void *POSIX_Init(void *arg)
     }
 
     int argc = 2;
-    char *argv[] = { "cholesky", "-p2", NULL };
+    char *argv[] = { "cholesky", "-p" STR(NUM_PROCS), NULL };
     int rc = main(argc, argv);
     exit(rc);
     return NULL;
@@ -46,8 +49,8 @@ void *POSIX_Init(void *arg)
 
 /* POSIX configuration */
 #define CONFIGURE_POSIX_APPLICATION
-#define CONFIGURE_MAXIMUM_PROCESSORS 2
-#define CONFIGURE_MAXIMUM_POSIX_THREADS 2
+#define CONFIGURE_MAXIMUM_PROCESSORS NUM_PROCS
+#define CONFIGURE_MAXIMUM_POSIX_THREADS NUM_PROCS
 #define CONFIGURE_POSIX_INIT_THREAD_TABLE
 #define CONFIGURE_USE_IMFS_AS_BASE_FILESYSTEM
 #define CONFIGURE_MAXIMUM_FILE_DESCRIPTORS 32

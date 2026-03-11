@@ -1,12 +1,15 @@
 #include <stdlib.h>
 #include <rtems.h>
 
+#define _STR(x) #x
+#define STR(x) _STR(x)
+
 int main(int argc, char **argv);
 
 void *POSIX_Init(void *arg)
 {
     int argc = 11;
-    char *argv[] = { "radiosity", "-p", "2", "-ae", "5000", "-bf", "0.1", "-en", "0.05", "-room", "-batch", NULL };
+    char *argv[] = { "radiosity", "-p", STR(NUM_PROCS), "-ae", "5000", "-bf", "0.1", "-en", "0.05", "-room", "-batch", NULL };
     int rc = main(argc, argv);
     exit(rc);
     return NULL; // not reached
@@ -18,8 +21,8 @@ void *POSIX_Init(void *arg)
 
 /* POSIX configuration */
 #define CONFIGURE_POSIX_APPLICATION
-#define CONFIGURE_MAXIMUM_PROCESSORS 2
-#define CONFIGURE_MAXIMUM_POSIX_THREADS 2
+#define CONFIGURE_MAXIMUM_PROCESSORS NUM_PROCS
+#define CONFIGURE_MAXIMUM_POSIX_THREADS NUM_PROCS
 #define CONFIGURE_POSIX_INIT_THREAD_TABLE
 #define CONFIGURE_USE_IMFS_AS_BASE_FILESYSTEM
 #define CONFIGURE_MAXIMUM_FILE_DESCRIPTORS 32
