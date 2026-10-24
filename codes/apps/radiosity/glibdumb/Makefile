@@ -10,7 +10,4 @@ TARGET = glib.a
 include ../../../Makefile.config
 
 $(TARGET): $(OBJS)
-	$(TOOLCHAIN_PREFIX)ar crv $(TARGET) $(OBJS)
-
-clean:
-	rm -rf $(OBJS) $(TARGET)
+	$(AR) crv $(TARGET) $(OBJS)

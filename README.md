@@ -54,6 +54,22 @@ Some benchmarks expect their inputs to be at very specific paths relative to the
 working directory, so it is recommended to change the working directory to the
 benchmark folder before executing it.
 
+## Building and Running on RTEMS
+
+The `codes` directory builds RTEMS executables (RISC-V `rv64imafdc` SMP BSP by
+default). The toolchain and BSP can be changed with `RTEMS_TOOL_PREFIX`,
+`BSP_PKG_CONFIG_PATH` and `RTEMS_PKG`.
+
+Each benchmark is built once and runs on any number of cores up to
+`SPLASH_MAX_PROCS` (default 8): the processor count is the number of
+processors online at boot, and the matching `-p` argument and input file are
+selected at run time. FFT, OCEAN and RADIX need a power-of-two count.
+
+	cd codes
+	make install                     # executables in codes/bin
+	./qemu.sh bin/BARNES 6           # run on 6 cores
+	make SPLASH_MAX_PROCS=16         # raise the upper bound
+
 ## Different Versions
 
 The first release of Splash-3 is tagged as `v3.0`. Small fixes might be

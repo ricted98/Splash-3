@@ -1,11 +1,12 @@
 TARGET = BARNES
-ROOTFS_FILES = inputs/n8k-p$(NUM_PROCS)
+OBJS = code.o code_io.o load.o grav.o getparam.o util.o
 
-.PRECIOUS: $(ROOTFS_FILES)
-
-# Define Objects
-OBJS = posix_init.o rootfs.o \
-       code.o code_io.o load.o grav.o getparam.o util.o
+# RTEMS configuration: the processor count is the last line of the input
+RTEMS_ARGV = barnes
+RTEMS_STDIN = input.p@P@
+INPUT_TEMPLATE = inputs/n8k-p1
+INPUT_SED = $$s/.*/$(1)/
+ROOTFS_FILES = $(INPUT_FILES)
 
 # Include the global rules
 include ../../Makefile.config
@@ -17,10 +18,3 @@ getparam.o: getparam.c.in stdinc.h
 grav.o: grav.c.in stdinc.h
 load.o: load.c.in stdinc.h
 util.o: util.c.in stdinc.h
-
-# Generate rootfs
-rootfs.tar: $(ROOTFS_FILES)
-	tar -cf $@ -b 1 $^
-
-rootfs.o: rootfs.tar
-	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

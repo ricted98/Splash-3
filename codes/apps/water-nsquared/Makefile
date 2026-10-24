@@ -1,11 +1,13 @@
 TARGET = WATER-NSQUARED
-ROOTFS_FILES = inputs/n512-p$(NUM_PROCS) random.in
 
-.PRECIOUS: $(ROOTFS_FILES)
+# RTEMS configuration: the processor count is the first field of line 3
+RTEMS_ARGV = water-nsquared
+RTEMS_STDIN = input.p@P@
+INPUT_TEMPLATE = inputs/n512-p1
+INPUT_SED = 3s/^[0-9]*/$(1)/
+ROOTFS_FILES = $(INPUT_FILES) random.in
 
-# Define Objects
-OBJS = posix_init.o rootfs.o \
-       bndry.o cnstnt.o cshift.o initia.o interf.o intraf.o kineti.o mdmain.o poteng.o predcor.o syscons.o water.o
+OBJS = bndry.o cnstnt.o cshift.o initia.o interf.o intraf.o kineti.o mdmain.o poteng.o predcor.o syscons.o water.o
 
 # Include the global rules
 include ../../Makefile.config
@@ -22,10 +24,3 @@ poteng.o: poteng.c.in global.h split.h mdvar.h frcnst.h water.h wwpot.h paramete
 predcor.o: predcor.c.in split.h mdvar.h parameters.h mddata.h global.h
 syscons.o: syscons.c.in parameters.h mdvar.h water.h wwpot.h cnst.h mddata.h global.h
 water.o: water.c.in parameters.h mdvar.h water.h wwpot.h cnst.h mddata.h fileio.h frcnst.h randno.h global.h split.h
-
-# Generate rootfs
-rootfs.tar: $(ROOTFS_FILES)
-	tar -cf $@ -b 1 $^
-
-rootfs.o: rootfs.tar
-	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

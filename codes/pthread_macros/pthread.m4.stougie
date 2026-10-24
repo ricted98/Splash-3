@@ -94,6 +94,9 @@ define(INCLUDES,`
 #include <stdatomic.h>
 #endif
 #include <stdint.h>
+#ifndef SPLASH_MAX_PROCS
+#error "SPLASH_MAX_PROCS must be set by the build"
+#endif
 #define PAGE_SIZE 4096
 #define __MAX_THREADS__ 256
 ')

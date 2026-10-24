@@ -1,11 +1,12 @@
 TARGET = CHOLESKY
+
+# RTEMS configuration
+RTEMS_ARGV = cholesky -p@P@
+RTEMS_STDIN = inputs/tk14.O
+RTEMS_INIT_STACK = 64 * 1024
 ROOTFS_FILES = inputs/tk14.O
 
-.PRECIOUS: $(ROOTFS_FILES)
-
-# Define Objects
-OBJS = posix_init.o rootfs.o \
-       amal.o assign.o bfac.o bksolve.o block2.o fo.o malloc.o \
+OBJS = amal.o assign.o bfac.o bksolve.o block2.o fo.o malloc.o \
        mf.o numLL.o parts.o seg.o solve.o tree.o util.o
 
 # Include the global rules
@@ -25,10 +26,3 @@ seg.c: matrix.h
 bksolve.c: matrix.h
 mf.c: matrix.h
 solve.c: matrix.h
-
-# Generate rootfs
-rootfs.tar: $(ROOTFS_FILES)
-	tar -cf $@ -b 1 $^
-
-rootfs.o: rootfs.tar
-	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

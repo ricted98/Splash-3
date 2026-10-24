@@ -1,8 +1,9 @@
 TARGET = OCEAN
+OBJS = jacobcalc.o jacobcalc2.o laplacalc.o linkup.o main.o multi.o slave1.o slave2.o subblock.o
 
-# Define Objects
-OBJS = posix_init.o \
-       jacobcalc.o jacobcalc2.o laplacalc.o linkup.o main.o multi.o slave1.o slave2.o subblock.o
+# RTEMS configuration
+RTEMS_ARGV = ocean_contiguous_partitions -p@P@ -n258
+RTEMS_POW2_ONLY = 1
 
 # Include the global rules
 include ../../../Makefile.config

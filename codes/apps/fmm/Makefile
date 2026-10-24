@@ -1,11 +1,13 @@
 TARGET = FMM
-ROOTFS_FILES = inputs/input.$(NUM_PROCS).16384
 
-.PRECIOUS: $(ROOTFS_FILES)
+# RTEMS configuration: the processor count is line 5 of the input
+RTEMS_ARGV = fmm
+RTEMS_STDIN = input.p@P@
+INPUT_TEMPLATE = inputs/input.1.16384
+INPUT_SED = 5s/.*/$(1)/
+ROOTFS_FILES = $(INPUT_FILES)
 
-# Define Objects
-OBJS = posix_init.o rootfs.o \
-       box.o construct_grid.o cost_zones.o defs.o fmm.o interactions.o memory.o particle.o partition_grid.o
+OBJS = box.o construct_grid.o cost_zones.o defs.o fmm.o interactions.o memory.o particle.o partition_grid.o
 
 # Include the global rules
 include ../../Makefile.config
@@ -30,10 +32,3 @@ particle.o: particle.c.in defs.h memory.h particle.h
 memory.o: memory.c.in defs.h memory.h
 defs.o: defs.c.in defs.h memory.h
 memory.h: defs.h particle.h box.h
-
-# Generate rootfs
-rootfs.tar: $(ROOTFS_FILES)
-	tar -cf $@ -b 1 $^
-
-rootfs.o: rootfs.tar
-	$(OBJCOPY) -I binary -O elf64-littleriscv -B riscv $< $@

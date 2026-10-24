@@ -1,9 +1,13 @@
 TARGET = RADIOSITY
 
-OBJS = posix_init.o \
-       display.o elemman.o modelman.o patchman.o rad_main.o rad_tools.o room_model.o smallobj.o taskman.o visible.o
+OBJS = display.o elemman.o modelman.o patchman.o rad_main.o rad_tools.o room_model.o smallobj.o taskman.o visible.o
 HHS = model.h.in parallel.h.in patch.h.in radiosity.h.in task.h.in structs.h.in
 HS = model.h parallel.h patch.h radiosity.h task.h structs.h
+LIBS = glibdumb/glib.a glibps/glibps.a
+CLEAN_HOOKS = clean-glib
+
+# RTEMS configuration
+RTEMS_ARGV = radiosity -p @P@ -ae 5000 -bf 0.1 -en 0.05 -room -batch
 
 # Include the global rules
 include ../../Makefile.config
@@ -11,14 +15,8 @@ include ../../Makefile.config
 CFLAGS := $(CFLAGS) -I./glibdumb -I./glibps
 
 #CCOPTS = -I -float -I/usr/include $(CFLAGS)
-LDFLAGS += -lm
 #CFLAGS = $(CINCLUDE) -O4 -march=i686 -mcpu=i686 -malign-double -funroll-loops -finline-functions -fomit-frame-pointer -D_REENTRANT
 #CINCLUDE = -I$(GLIBDIR) -I./glibps
-
-LOADLIBES = glibdumb/glib.a glibps/glibps.a
-
-$(TARGET): $(OBJS) $(LOADLIBES)
-	$(CC) $(OBJS) $(CFLAGS) $(LOADLIBES) -o $(TARGET) $(LDFLAGS)
 
 radiosity.h: patch.h model.h parallel.h task.h
 rad_main.c: rad_main.c.in $(HS)
@@ -38,7 +36,7 @@ glibdumb/glib.a:
 glibps/glibps.a:
 	$(MAKE) -C glibps
 
-clean:
+.PHONY: clean-glib
+clean-glib:
 	$(MAKE) -C glibdumb clean
 	$(MAKE) -C glibps clean
-	$(RM) $(OBJS) RADIOSITY $(HS) $(M4_GEN_C)

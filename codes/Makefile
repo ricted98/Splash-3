@@ -1,33 +1,32 @@
-.PHONY: all clean
+# Each benchmark is built once and runs on 1..SPLASH_MAX_PROCS cores: the
+# processor count is taken from the processors online at boot.
 
-all:
-	$(MAKE) -C apps/barnes
-	$(MAKE) -C apps/fmm
-	$(MAKE) -C apps/ocean/contiguous_partitions
-# 	$(MAKE) -C apps/ocean/non_contiguous_partitions
-	$(MAKE) -C apps/radiosity
-# 	$(MAKE) -C apps/raytrace
-# 	$(MAKE) -C apps/volrend
-	$(MAKE) -C apps/water-nsquared
-	$(MAKE) -C apps/water-spatial
-	$(MAKE) -C kernels/cholesky
-	$(MAKE) -C kernels/fft
-	$(MAKE) -C kernels/lu/contiguous_blocks
-	$(MAKE) -C kernels/lu/non_contiguous_blocks
-	$(MAKE) -C kernels/radix
+DIRS := apps/barnes \
+        apps/fmm \
+        apps/ocean/contiguous_partitions \
+        apps/radiosity \
+        apps/water-nsquared \
+        apps/water-spatial \
+        kernels/cholesky \
+        kernels/fft \
+        kernels/lu/contiguous_blocks \
+        kernels/lu/non_contiguous_blocks \
+        kernels/radix
+# Not ported yet: apps/ocean/non_contiguous_partitions apps/raytrace apps/volrend
+
+BINDIR ?= $(CURDIR)/bin
+
+.PHONY: all install clean $(DIRS)
+
+all: $(DIRS)
+
+$(DIRS):
+	$(MAKE) -C $@
+
+# Copy all executables into $(BINDIR)
+install: all
+	for d in $(DIRS); do $(MAKE) -C $$d install BINDIR=$(BINDIR) || exit 1; done
 
 clean:
-	$(MAKE) -C apps/barnes clean
-	$(MAKE) -C apps/fmm clean
-	$(MAKE) -C apps/ocean/contiguous_partitions clean
-# 	$(MAKE) -C apps/ocean/non_contiguous_partitions clean
-	$(MAKE) -C apps/radiosity clean
-# 	$(MAKE) -C apps/raytrace clean
-# 	$(MAKE) -C apps/volrend clean
-	$(MAKE) -C apps/water-nsquared clean
-	$(MAKE) -C apps/water-spatial clean
-	$(MAKE) -C kernels/cholesky clean
-	$(MAKE) -C kernels/fft clean
-	$(MAKE) -C kernels/lu/contiguous_blocks clean
-	$(MAKE) -C kernels/lu/non_contiguous_blocks clean
-	$(MAKE) -C kernels/radix clean
+	for d in $(DIRS); do $(MAKE) -C $$d clean || exit 1; done
+	rm -rf $(CURDIR)/bin
